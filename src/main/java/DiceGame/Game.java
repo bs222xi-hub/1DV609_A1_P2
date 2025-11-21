@@ -1,7 +1,5 @@
 package DiceGame;
 
-import java.util.Scanner;
-
 public class Game {
 
     private final Dice dice;
@@ -18,7 +16,15 @@ public class Game {
         this.leaderBoard = leaderBoard;
     }
 
-    public void Rounds() {
+    public Player getP1() {
+        return p1;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
+    public void Rounds(OutputProvider output) {
         int r1 = dice.rollDice();
         int r2 = dice.rollDice();
         p1.playerScores(r1);
@@ -34,23 +40,24 @@ public class Game {
         return scoreBoard.getWinner(p1, p2);
     }
 
-    public void playTheGame(InputProvider inputProvider) {
+    public void playTheGame(InputProvider inputProvider, OutputProvider output) {
         int round = 1;
-        while (true) {
-            System.out.println("Enter P to play Q to quit!");
+        boolean running = true;
+        while (running) {
+            output.print("Enter P to play Q to quit");
             String input = inputProvider.getInput();
 
             if (input.equalsIgnoreCase("P")) {
-                System.out.println("Playing round: " + round);
-                Rounds();
-                System.out.println(p1.getName() + " scores:" + p1.getScore());
-                System.out.println(p2.getName() + " scores:" + p2.getScore());
+                output.print("Playing round: " + round);
+                Rounds(output);
+                output.print(p1.getName() + " scores:" + p1.getScore());
+                output.print(p2.getName() + " scores:" + p2.getScore());
                 round++;
             } else if (input.equalsIgnoreCase("Q")) {
-                System.out.println("Game Over. Winner is: " + getWinner());
-                return;
+                output.print("Game Over. Winner is: " + getWinner());
+                running = false;
             } else {
-                System.out.println("Invalid input!");
+                output.print("Invalid input!");
             }
         }
     }
